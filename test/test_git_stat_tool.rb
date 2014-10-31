@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require_relative 'git_stat_tool'
+require_relative '../lib/git_stat_tool'
 require 'minitest/autorun'
 require 'octokit'
 require 'json'
