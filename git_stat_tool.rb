@@ -1,4 +1,6 @@
-module GitStatsModule
+#!/usr/bin/env ruby
+
+class GitStatTool
   require 'english'
   require 'highline/import'
   require 'octokit'
@@ -6,7 +8,19 @@ module GitStatsModule
   require 'json'
 
   USER_AUTHENTICATION_ERROR    = "Authentication failed."
-  GET_REPO_FAILURE_MSG = "An error occurred while trying to get repos. Gracefully exiting."
+  GET_REPO_FAILURE_MSG = "An error occurred while trying to get repos. Exiting."
+  
+  def initialize
+    #go
+  end
+
+  def go
+    username = get_username
+    password = get_user_password
+    @User = init_user(username, password)
+    @Repos = get_repos(@User)
+    print_welcome
+  end
 
   # Prompts for and retrieves Github username
   def get_username
@@ -23,22 +37,24 @@ module GitStatsModule
     }
   end
 
-  # Calls user.user to validate users credentials
+  # Creates and authorizes the GitHub user
   # Params:
-  # +username+:: user provided Github username
-  # +password+:: user provided Github password
-  def authorize_get_user(username, password)
-    user = Octokit::Client.new(:login => username, :password => password)
-    if (user.user)
-      return user
-    else
-      abort USER_AUTHENTICATION_ERROR
+  # +username+:: user's GitHub username
+  # +password+:: user's GitHub password
+  def init_user(username, password)
+    new_user = Octokit::Client.new(:login => username, :password => password)
+    begin
+      new_user.user
+    rescue Exception => e
+      abort USER_AUTHENTICATION_ERROR      
     end
+    return new_user
   end
 
-  # Retrieves list of repository names
-  # Params:
-  # +user+:: the Github user
+  def print_welcome
+    puts "You currently have #{@Repos.size} repositories."
+  end
+
   def get_repos(user)
     begin
       repos = Array.new
@@ -54,3 +70,5 @@ module GitStatsModule
   end
 
 end
+
+GitStatTool.new
