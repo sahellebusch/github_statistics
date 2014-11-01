@@ -10,10 +10,6 @@ class GitStatTool
   USER_AUTH_ERROR      = "Authentication failed."
   GET_REPO_FAILURE_MSG = "An error occurred while trying to get repos. Exiting."
 
-  def initialize
-    go
-  end
-  
   def go
     username = get_username
     password = get_user_password
