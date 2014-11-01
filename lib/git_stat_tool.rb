@@ -18,13 +18,11 @@ class GitStatTool
     print_welcome
   end
 
-  # Prompts for and retrieves Github username
   def get_username
     # TODO find out real username requirements
     username = ask("Github login: ") { |un| un.validate = /^[\w]{4,20}$/ }
   end
 
-  # Prompts for and retrieves Github password
   def get_user_password
     #TODO find out real password requirements
     password      = ask("Enter your password:  ") { |pw|
@@ -34,9 +32,14 @@ class GitStatTool
   end
 
   # Creates and authorizes the GitHub user
-  # Params:
-  # +username+:: user's GitHub username
-  # +password+:: user's GitHub password
+  #
+  # == Parameters:
+  # username::
+  #   user provided GitHub username
+  # password::
+  #   user provided GitHub password
+  # == Returns:
+  #  returns a Sawyer::Resource object 
   def init_user(username, password)
     new_user = Octokit::Client.new(:login => username, :password => password)
     begin
@@ -51,9 +54,13 @@ class GitStatTool
     puts "You currently have #{@Repos.size} repositories."
   end
 
-  # Gets a list of user repos
-  # Params:
-  # +user+:: The initialized GitHub user
+  # Get a list of user repositories
+  #
+  # == Parameters:
+  #  user::
+  #    user Sawyer::Resource object
+  # == Returns:
+  # return an array of the user's repositories 
   def get_repos(user)
     begin
       repos    = Array.new

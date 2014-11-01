@@ -16,7 +16,6 @@ class TestGitStatsModule < Minitest::Test
         @tool        = GitStatTool.new
         @mock_user   = Octokit::Client.new(:login    => @CREDENTIALS["username"],
                                          :password => @CREDENTIALS["password"])
-        @test_user = @tool::init_user(@CREDENTIALS["username"], @CREDENTIALS["password"])
     end
 
     def test_init_user
@@ -31,7 +30,16 @@ class TestGitStatsModule < Minitest::Test
         rescue Exception => e
             assert_equal USER_AUTH_ERROR, e
         end
-
     end
 
+    def test_gest_repositories
+        test_user      = @tool::init_user(@CREDENTIALS["username"], @CREDENTIALS["password"])
+        expected_repos = Array.new
+        test_repos     = @tool.get_repos(test_user)
+        # return an array of hashes, get just the names
+        @mock_user.repositories.each  { |repo|
+            expected_repos.push(repo["name"])
+        }
+        assert_equal expected_repos, test_repos
+    end
 end
