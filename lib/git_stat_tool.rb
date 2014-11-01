@@ -10,11 +10,19 @@ class GitStatTool
   USER_AUTH_ERROR      = "Authentication failed."
   GET_REPO_FAILURE_MSG = "An error occurred while trying to get repos. Exiting."
 
-  def go
-    username = get_username
-    password = get_user_password
-    @User    = init_user(username, password)
-    @Repos   = get_repos(@User)
+  def go(options)
+    if options[:username]
+      username = options[:username]
+    else
+      username = get_username
+    end
+    if options[:password]
+      password = options[:password]
+    else
+      password = get_user_password
+    end
+    @User  = init_user(username, password)
+    @Repos = get_repos(@User)
     print_welcome
   end
 
@@ -39,7 +47,7 @@ class GitStatTool
   # password::
   #   user provided GitHub password
   # == Returns:
-  #  returns a Sawyer::Resource object 
+  #  returns a Sawyer::Resource object
   def init_user(username, password)
     new_user = Octokit::Client.new(:login => username, :password => password)
     begin
@@ -51,7 +59,7 @@ class GitStatTool
   end
 
   def print_welcome
-    puts "You currently have #{@Repos.size} repositories."
+    puts "Welcome to the GitHub repository statistics tool. \nYou currently have #{@Repos.size} repositories."
   end
 
   # Get a list of user repositories
@@ -60,7 +68,7 @@ class GitStatTool
   #  user::
   #    user Sawyer::Resource object
   # == Returns:
-  # return an array of the user's repositories 
+  # return an array of the user's repositories
   def get_repos(user)
     begin
       repos    = Array.new
