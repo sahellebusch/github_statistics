@@ -7,18 +7,18 @@ class GitStatTool
   require 'awesome_print'
   require 'json'
 
-  USER_AUTHENTICATION_ERROR    = "Authentication failed."
+  USER_AUTH_ERROR      = "Authentication failed."
   GET_REPO_FAILURE_MSG = "An error occurred while trying to get repos. Exiting."
-  
-  def initialize
-    #go
-  end
 
+  def initialize
+    go
+  end
+  
   def go
     username = get_username
     password = get_user_password
-    @User = init_user(username, password)
-    @Repos = get_repos(@User)
+    @User    = init_user(username, password)
+    @Repos   = get_repos(@User)
     print_welcome
   end
 
@@ -31,8 +31,8 @@ class GitStatTool
   # Prompts for and retrieves Github password
   def get_user_password
     #TODO find out real password requirements
-    password = ask("Enter your password:  ") { |pw|
-      pw.echo = false
+    password      = ask("Enter your password:  ") { |pw|
+      pw.echo     = false
       pw.validate = /^[\w\W]{3,20}$/
     }
   end
@@ -46,7 +46,7 @@ class GitStatTool
     begin
       new_user.user
     rescue Exception => e
-      abort USER_AUTHENTICATION_ERROR      
+      abort USER_AUTH_ERROR
     end
     return new_user
   end
@@ -55,9 +55,12 @@ class GitStatTool
     puts "You currently have #{@Repos.size} repositories."
   end
 
+  # Gets a list of user repos
+  # Params:
+  # +user+:: The initialized GitHub user
   def get_repos(user)
     begin
-      repos = Array.new
+      repos    = Array.new
       response = user.repositories
       # return an array of hashes, get just the names
       response.each { |repo|
