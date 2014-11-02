@@ -98,7 +98,6 @@ class GitStatTool
     response = user.repositories
     begin
       response.each {  |repo|
-        # time.strftime("%Y-%m-%d %H:%M:%S")
         repo_hash = {:name => repo["name"],
                      :created_at => repo["created_at"],
                      :last_pushed => repo["pushed_at"] }
