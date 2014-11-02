@@ -24,12 +24,12 @@ class GitStatTool
     if options[:username]
       username = options[:username]
     else
-      username = get_username
+      username = @tool.get_username
     end
     if options[:password]
       password = options[:password]
     else
-      password = get_user_password
+      password = @tool.get_user_password
     end
     @User  = init_user(username, password)
     @Repos = get_repos(@User)
@@ -59,6 +59,7 @@ class GitStatTool
   #   user provided GitHub username
   # password::
   #   user provided GitHub password
+  #
   # == Returns:
   #  returns a Sawyer::Resource object
   def init_user(username, password)
@@ -94,19 +95,20 @@ class GitStatTool
   # == Parameters:
   #  user::
   #    user Sawyer::Resource object
+  #
   # == Returns:
   # return an array of the user's repositories
   def get_repos(user)
     repos   = Array.new
-    response = user.repositories
+    response = user.repositories(nil, options = {'sort' => 'created'})
     begin
       response.each {  |repo|
         repo_hash = {:name => repo["name"],
                      :created_at => repo["created_at"],
                      :last_pushed => repo["pushed_at"] }
-        repos.push(repo_hash)
+        repos << repo_hash
       }
-      return repos.sort_by { |repo|  repo[:created_at] }
+      return repos
     rescue Exception => e
       abort GET_REPO_FAILURE_MSG
     end
