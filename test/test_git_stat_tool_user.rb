@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/git_stat_tool'
+require_relative '../lib/git_stat_tool_user'
 require 'minitest/autorun'
 require 'octokit'
 require 'json'
 
-class TestGitStatsModule < Minitest::Test
+class TestGitStatToolUser < Minitest::Test
 
     TEST_USER_PWD_FAIL = 'fail'
     USER_AUTH_ERROR    = "Authentication failed."
@@ -13,9 +13,9 @@ class TestGitStatsModule < Minitest::Test
     def setup
         jsonfile     = File.read('test/test_credentials.json')
         @CREDENTIALS = JSON.parse(jsonfile)
-        @tool        = GitStatTool.new
+        @tool        = GitStatToolUser.new
         @mock_user   = Octokit::Client.new(:login    => @CREDENTIALS["username"],
-                                         :password => @CREDENTIALS["password"])
+                                           :password => @CREDENTIALS["password"])
     end
 
     def test_init_user
@@ -32,14 +32,4 @@ class TestGitStatsModule < Minitest::Test
         end
     end
 
-    def test_gest_repositories
-        test_user      = @tool::init_user(@CREDENTIALS["username"], @CREDENTIALS["password"])
-        expected_repos = Array.new
-        test_repos     = @tool.get_repos(test_user)
-        # return an array of hashes, get just the names
-        @mock_user.repositories.each  { |repo|
-            expected_repos.push(repo["name"])
-        }
-        assert_equal expected_repos, test_repos
-    end
 end
