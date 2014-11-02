@@ -34,6 +34,9 @@ class GitStatTool
     @User  = init_user(username, password)
     @Repos = get_repos(@User)
     print_repos
+
+    selection = select_repo
+    puts selection
   end
 
   def get_username
@@ -68,7 +71,7 @@ class GitStatTool
     return new_user
   end
 
-  # Prints a welcome statement along with a list of the user's 
+  # Prints a welcome statement along with a list of the user's
   # repositories, date created and last pushed.
   def print_repos
     say("<%= color('Welcome to the GitHub repository statistics tool.', :headline) %>")
@@ -107,6 +110,29 @@ class GitStatTool
     rescue Exception => e
       abort GET_REPO_FAILURE_MSG
     end
+  end
+
+  def select_repo
+    continue = true
+    while continue
+      choice = ask("Input a repo name or all => ") { |name| name.validate = /^[\w-]*$/m }
+      if choice == 'all'
+        continue = false
+        choice = @Repos
+      else
+        @Repos.each { |repo|
+          if choice == repo[:name]
+            continue = false
+            choice = repo
+          end
+        }
+
+      end
+      if continue
+        say("That is not a name of a repo you own.")
+      end
+    end
+    return choice
   end
 
 end
