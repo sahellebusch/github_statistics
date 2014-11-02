@@ -11,16 +11,6 @@ class GitStatToolUser
   USER_AUTH_ERROR      = "Authentication failed."
   GET_REPO_FAILURE_MSG = "An error occurred while trying to get repos. Exiting."
 
-  ft = HighLine::ColorScheme.new do |cs|
-    cs[:headline]        = [ :bold, :red ]
-    cs[:horizontal_line] = [ :bold, :white ]
-    cs[:blue]            = [ :blue ]
-    cs[:even_row]        = [ :red ]
-    cs[:odd_row]         = [ :green ]
-    cs[:bold]            = [ :bold ]
-  end
-  HighLine.color_scheme = ft
-
   def get_username
     # TODO find out real username requirements
     username = ask("Github login: ") { |un| un.validate = /^[\w]{4,20}$/ }

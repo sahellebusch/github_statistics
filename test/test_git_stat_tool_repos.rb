@@ -12,7 +12,7 @@ class TestGitStatToolRepo < Minitest::Test
 	USER_AUTH_ERROR    = "Authentication failed."
 
 	def setup
-		jsonfile     = File.read('test_credentials.json')
+		jsonfile     = File.read('test/test_credentials.json')
 		@CREDENTIALS = JSON.parse(jsonfile)
 		@user_tool   = GitStatToolUser.new
 		@repo_tool   = GitStatToolRepo.new

@@ -4,11 +4,18 @@ class GitStatToolRepo
 	require 'english'
 	require 'highline/import'
 	require 'octokit'
-	require 'awesome_print'
-	require 'json'
 
+	ft = HighLine::ColorScheme.new do |cs|
+		cs[:headline]        = [ :bold, :red ]
+		cs[:horizontal_line] = [ :bold, :white ]
+		cs[:blue]            = [ :blue ]
+		cs[:even_row]        = [ :red ]
+		cs[:odd_row]         = [ :green ]
+		cs[:bold]            = [ :bold ]
+	end
+	HighLine.color_scheme = ft
 
-	# Get a list of user repositories, sorted buy
+	# Get a list of user repositories, sorted by
 	# the date & time of creation
 	#
 	# == Parameters:
@@ -71,6 +78,5 @@ class GitStatToolRepo
 		end
 		return choice
 	end
-
 
 end
